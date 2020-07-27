@@ -29,15 +29,6 @@ static NSMutableDictionary *holdingMap;
     } @catch (NSException *exception) {
         NSLog(@"some error:%@", exception);
     }
-
-//        operation.responseData = NSData.new;
-//        BLockWithObject oldBlock = operation.responseBlock;
-//        NSLog(@"%s:%@",__func__,oType);
-//        operation.responseBlock = nil;
-//        operation.responseBlock = ^(NSObject *object) {
-//            NSLog(@"result :%@,%@",object.class,object);
-//            oldBlock(object);
-//        };
 }
 
 #pragma mark - holdingMap
