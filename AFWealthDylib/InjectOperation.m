@@ -113,21 +113,36 @@ static NSMutableDictionary *holdingMap;
 
                     // 预估时间不等于网络净值时间时 统计收益
                     if ([netValueReportDate isKindOfClass:NSString.class] &&
-                        [estimateDate isKindOfClass:NSString.class] &&
-                        ![netValueReportDate isEqualToString:estimateDate]) {
+                        [estimateDate isKindOfClass:NSString.class]) {
                         NSString *netValue = model[@"netValue"];
-                        NSString *estimateNetValue = model[@"estimateNetValue"];
-                        // 没有预估时 忽略收益
-                        if (estimateNetValue.doubleValue && netValue.doubleValue) {
-                            double income = (estimateNetValue.doubleValue - netValue.doubleValue) * value.doubleValue;
-                            [incomes addObject:@(income)];
-                            [contentTags addObject:@{
-                                 @"visible": @YES,
-                                 @"text": [NSString stringWithFormat:@"收益:%0.2f", income],
-                                 @"type": @"BULL_FUND",
-                            }];
+                        if (
+                            ![netValueReportDate isEqualToString:estimateDate]) {
+                            NSString *estimateNetValue = model[@"estimateNetValue"];
+                            // 没有预估时 忽略收益
+                            if (estimateNetValue.doubleValue && netValue.doubleValue) {
+                                double income = (estimateNetValue.doubleValue - netValue.doubleValue) * value.doubleValue;
+                                [incomes addObject:@(income)];
+                                [contentTags addObject:@{
+                                     @"visible": @YES,
+                                     @"text": [NSString stringWithFormat:@"收益:%0.2f", income],
+                                     @"type": @"BULL_FUND",
+                                }];
+                            }
+                        } else {
+                            NSString *dayOfGrowth = model[@"dayOfGrowth"];
+                            if (dayOfGrowth.length) {
+                                NSString *modifyWorth = [NSString stringWithFormat:@"%0.4f",netValue.doubleValue / (1 + dayOfGrowth.doubleValue)];
+                                double income = (netValue.doubleValue - modifyWorth.doubleValue) * value.doubleValue;
+                                [incomes addObject:@(income)];
+                                [contentTags addObject:@{
+                                     @"visible": @YES,
+                                     @"text": [NSString stringWithFormat:@"净收:%0.2f", income],
+                                     @"type": @"BULL_FUND",
+                                }];
+                            }
                         }
-                    } else {
+                    }
+                    if (!contentTags.count) {
                         [contentTags addObject:@{
                              @"visible": @YES,
                              @"text": [NSString stringWithFormat:@"份额:%@", value],
@@ -163,7 +178,7 @@ static NSMutableDictionary *holdingMap;
                 label.layer.cornerRadius = 7.f;
                 label.layer.masksToBounds = YES;
 //                label.backgroundColor = [UIColor colorWithRed:252/255.f green:173/255.f blue:122/255.f alpha:1.f];
-                label.backgroundColor = [UIColor colorWithRed:0x99/255.f green:0xbb/255.f blue:0xff/255.f alpha:1.f];
+                label.backgroundColor = [UIColor colorWithRed:0x99 / 255.f green:0xbb / 255.f blue:0xff / 255.f alpha:1.f];
                 label.text = desc;
                 label.textAlignment = NSTextAlignmentCenter;
                 label.textColor = UIColor.whiteColor;
