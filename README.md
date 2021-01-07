@@ -27,3 +27,6 @@
 将蚂蚁财富的ipa包放入TargetApp下 运行即可
 
 注意：需要删除原有的 App
+
+# 懒人
+[友情链接](https://github.com/iOSleep/AFWealth)
